@@ -14,15 +14,8 @@ function checkIP() {
 
     spinner.style.display = 'block';
 
-    const apiUrl = `https://api.allorigins.win/raw?url=https://ip.cfvless.workers.dev/?ip=${ipInput}`;
-
-    fetch(apiUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+    fetch(`https://api.allorigins.win/raw?url=https://ip.cfvless.workers.dev/?ip=${ipInput}`)
+        .then(response => response.json())
         .then(data => {
             spinner.style.display = 'none';
             ipData.innerHTML = formatOutput(data);
@@ -30,7 +23,6 @@ function checkIP() {
         .catch(error => {
             spinner.style.display = 'none';
             notification.innerHTML = 'Error fetching IP data.';
-            console.error('Error fetching IP data:', error);
         });
 }
 
@@ -47,7 +39,7 @@ function formatOutput(data) {
     if (data.isp) items.push({ label: 'ISP', value: data.isp });
     if (data.country) items.push({ label: 'Country', value: data.country });
     if (data.city) items.push({ label: 'City', value: data.city });
-    if (data.proxyStatus) items.push({ label: 'Proxy Status', value: data.proxyStatus });
+    if (data.proxyStatus) items.push({ label: 'proxyStatus', value: data.proxyStatus });
 
     if (items.length === 0) return '<div>No data available.</div>';
 
@@ -59,5 +51,7 @@ function formatOutput(data) {
     `).join('');
 
     return outputItems;
+}
+;
         }
         
