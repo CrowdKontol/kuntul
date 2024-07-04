@@ -14,7 +14,18 @@ function checkIP() {
 
     spinner.style.display = 'block';
 
-    fetch(`https://thingproxy.freeboard.io/fetch/https://ip.cfvless.workers.dev/?ip=${ipInput}`)
+    let apiUrl = '';
+
+    // Check if running in localhost or production
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        // Development environment
+        apiUrl = `https://thingproxy.freeboard.io/fetch/https://ip.cfvless.workers.dev/?ip=${ipInput}`;
+    } else {
+        // Production environment
+        apiUrl = `https://ip.cfvless.workers.dev/?ip=${ipInput}`;
+    }
+
+    fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
             spinner.style.display = 'none';
@@ -39,7 +50,7 @@ function formatOutput(data) {
     if (data.isp) items.push({ label: 'ISP', value: data.isp });
     if (data.country) items.push({ label: 'Country', value: data.country });
     if (data.city) items.push({ label: 'City', value: data.city });
-    if (data.proxyStatus) items.push({ label: 'proxyStatus', value: data.proxyStatus });
+    if (data.proxyStatus) items.push({ label: 'Proxy Status', value: data.proxyStatus });
 
     if (items.length === 0) return '<div>No data available.</div>';
 
@@ -51,4 +62,4 @@ function formatOutput(data) {
     `).join('');
 
     return outputItems;
-}
+        }
