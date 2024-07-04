@@ -14,19 +14,15 @@ function checkIP() {
 
     spinner.style.display = 'block';
 
-    let apiUrl = '';
-
-    // Check if running in localhost or production
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        // Development environment
-        apiUrl = `https://thingproxy.freeboard.io/fetch/https://ip.cfvless.workers.dev/?ip=${ipInput}`;
-    } else {
-        // Production environment
-        apiUrl = `https://ip.cfvless.workers.dev/?ip=${ipInput}`;
-    }
+    const apiUrl = `https://api.allorigins.win/raw?url=https://ip.cfvless.workers.dev/?ip=${ipInput}`;
 
     fetch(apiUrl)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             spinner.style.display = 'none';
             ipData.innerHTML = formatOutput(data);
@@ -34,6 +30,7 @@ function checkIP() {
         .catch(error => {
             spinner.style.display = 'none';
             notification.innerHTML = 'Error fetching IP data.';
+            console.error('Error fetching IP data:', error);
         });
 }
 
@@ -63,3 +60,4 @@ function formatOutput(data) {
 
     return outputItems;
         }
+        
